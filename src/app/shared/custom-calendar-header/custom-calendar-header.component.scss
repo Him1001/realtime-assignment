@@ -1,0 +1,36 @@
+.custom-calendar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 0px;
+  gap: 8px;
+}
+
+.current-month {
+  font-size: 18px;
+  font-weight: 500;
+  color: #323238;
+  line-height: 21px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #999;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep {
+  .mdc-dialog .mdc-dialog__content {
+    padding: 0px 16px 16px 16px;
+  }
+  .mat-calendar-content {
+    padding: 0px;
+  }
+}

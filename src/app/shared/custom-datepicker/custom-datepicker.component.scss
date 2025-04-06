@@ -1,0 +1,52 @@
+.mat-dialog-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  button {
+    text-transform: none;
+  }
+
+  .action-btns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 elements per row */
+    padding: 24px 16px 0 16px;
+    gap: 16px;
+    button {
+      color: #1DA1F2;
+      gap: 16px;
+      &.active {
+        color: #ffff;
+        background-color: #1DA1F2;
+      }
+    }
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    .date-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      span {
+        line-height: 20px;
+      }
+    }
+    .btn-wrapper {
+      display: flex;
+      gap: 16px;
+      .cancel-btn {
+        color: #1DA1F2;
+      }
+      .save-btn {
+        color: #ffff;
+      }
+    }
+  }
+ 
+
+  ::ng-deep .mat-calendar-body-label {
+    display: none !important;
+  }

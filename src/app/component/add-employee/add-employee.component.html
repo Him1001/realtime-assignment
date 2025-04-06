@@ -1,0 +1,51 @@
+<div class="main-container">
+  <mat-toolbar class="tool-bar">
+      <h3 >Add Employee Details</h3>
+    </mat-toolbar>
+
+    <div class="main-body">
+    <div class="container">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-icon matPrefix>
+          <img src="/assets/profile.png" alt="Profile-icon"/>
+        </mat-icon>
+        <input matInput [value]="employeeName()" (input)="employeeName.set($any($event.target).value)" placeholder="Employee name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width" (click)="openRoleSelection()">
+          <mat-icon matPrefix>
+            <img src="/assets/suitcase.png" alt="Profile-icon"/>
+          </mat-icon>
+          <input matInput [value]="selectedRole()" placeholder="Select role" readonly>
+          <mat-icon matSuffix>
+            <img src="/assets/arrow_drop_down.png" alt="Arrow-down"/>
+          </mat-icon>
+        </mat-form-field>
+
+      <div class="date-picker-container">
+        <div class="date-container">
+          <mat-form-field appearance="outline" class="full-width" (click)="openDatePicker($event, 'start')">
+            <mat-icon matPrefix>
+              <img src="/assets/calender.png" alt="calender-icon"/>
+            </mat-icon>
+            <input matInput [value]="startDate()" placeholder="Today" readonly>
+          </mat-form-field>
+        </div>
+
+        <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+        <div class="date-container">
+          <mat-form-field  field appearance="outline" class="full-width" (click)="openDatePicker($event, 'end')">
+            <mat-icon matPrefix>
+              <img src="/assets/calender.png" alt="calender-icon"/>
+            </mat-icon>
+            <input matInput [value]="endDate()" placeholder="No date" readonly>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="action-btns">
+      <button (click)="saveEmployee()" class="save-btn" mat-button color="primary">Save</button>
+      <button (click)="redirectToHome()" class="cancel-btn" mat-button>Cancel</button>
+    </div>
+    </div>
+</div>
