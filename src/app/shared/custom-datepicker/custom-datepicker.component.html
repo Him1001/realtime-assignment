@@ -1,17 +1,16 @@
 <mat-dialog-actions align="start" class="action-btns">
-  <ng-container *ngFor="let date of options">
+  <ng-container *ngFor="let date of options()">
     <button [ngClass]="{'active': date.selected }" mat-button (click)="selectDate(date.value)">{{date.name}}</button>
   </ng-container>
 </mat-dialog-actions>
 <mat-dialog-content class="dialog-content">
-  <mat-calendar [(selected)]="selectedDate"
-                [headerComponent]="customHeader">
+  <mat-calendar [(selected)]="selectedDate" [headerComponent]="customHeader">
   </mat-calendar>
 </mat-dialog-content>
 
 <footer class="footer">
   <div class="date-wrapper">
-    <mat-icon><img src="/assets/calender.png"/></mat-icon>
+    <mat-icon><img src="/assets/calender.png" /></mat-icon>
     <span>{{selectedDate ? (selectedDate | date) : null }}</span>
   </div>
   <div class="btn-wrapper">

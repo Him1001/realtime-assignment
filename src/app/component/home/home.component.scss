@@ -1,108 +1,3 @@
-// // .home-container {
-// //     .tool-bar {
-// //         padding: 16px;
-// //         background: #1DA1F2;
-// //         color: #ffff;
-// //     }
-// // }
-// mat-toolbar {
-//     padding: 16px;
-//     background: #1DA1F2;
-//     color: #ffff;
-// }
-
-// .container {
-//     display: flex;
-//     flex-direction: column;
-//     .current-employees-wrapper, .previous-employees-wrapper {
-//       padding: 16px;
-
-//       .current-heading, .previous-heading {
-//         color: #1DA1F2;
-//         font-weight: 500;
-//         font-size: 16px;
-//         line-height: 24px;
-//       }
-//       .current-employees, .previous-employees {
-//         max-height: 312px;
-//         overflow: hidden;
-//         overflow-y: scroll;
-//         padding: 16px 0px 0px;
-//         .details-section {
-//           display: flex;
-//           flex-direction: column;
-//           gap: 6px;
-//           padding: 16px 0px;
-
-//           position: relative;
-//           background: white;
-//           border-radius: 8px;
-//           box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-//           transition: transform 0.3s ease-in-out;
-//           .employee-content {
-//             .employee-content {
-//               flex-grow: 1;
-//             }
-//           }
-//           .employee-name {
-//             color: #323238;
-//             line-height: 20px;
-//             font-weight: 500;
-//             font-size: 16px;
-//           }
-//           .employee-role, .employee-join-date {
-//             color: #949C9E;
-//             font-size: 14px;
-//             line-height: 20px;
-//           }
-//         }
-//       }
-//     }
-//   }
-
-//   .empty-state {
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//   }
-
-//   .empty-state img {
-//     width: 200px;  // Adjust based on your image
-//     margin-bottom: 10px;
-//   }
-
-//   .add-btn {
-//     position: fixed;
-//     bottom: 20px;
-//     right: 20px;
-//     height: 50px;
-//     width: 50px;
-//     border-radius: 8px;
-//     background-color: #1DA1F2;
-//     color: #ffff;
-//   }
-//   .footer {
-//     // display: flex;
-//     // justify-content: space-between;
-//     // padding: 12px 24px 44px 16px;
-//     // p {
-//     //   font-size: 15px;
-//     //   color: #949C9E;
-//     //   line-height: 20px;
-//     //   letter-spacing: 2px;
-//     // }
-//     // .add-btn {
-//     //   height: 50px;
-//     //   width: 50px;
-//     //   border-radius: 8px;
-//     //   background-color: #1DA1F2;
-//     //   color: #ffff;
-//     // }
-//   }
-
-
-
-
   .delete-button {
     position: absolute;
     right: -76px;
@@ -119,20 +14,6 @@
     transition: opacity 0.2s;
   }
 
-//   .main-content {
-//     flex-direction: column;
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     height: 100vh;
-//   }
-
-
-
-
-
-
-
 /* Toolbar */
 .toolbar {
   font-size: 18px;
@@ -145,79 +26,81 @@
 
 /* Content Area */
 .content-area {
-  padding: 16px;
   position: relative;
   overflow: hidden;
-}
-
-/* Empty State */
-.empty-state {
-  text-align: center;
-  margin-top: 60px;
-}
-.empty-state img {
-  width: 200px;
-  margin-bottom: 16px;
-}
-.empty-state p {
-  color: #555;
-  font-size: 16px;
-}
-
-.employee-section {
-  max-height: 312px;
-  overflow: hidden;
-  overflow-y: scroll;
-  &.previous {
-    margin-top: 16px;
+  height: calc(100% - 60px);
+  &.empty-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    margin-top: 60px;
+  }
+  .empty-state img {
+    width: 200px;
+    margin-bottom: 16px;
+  }
+  .employee-section {
+    height: 45%;
+    overflow: hidden;
+    overflow-y: auto;
+    /* Employee Section */
+    .section-title {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      margin: 0px;
+      font-size: 14px;
+      font-size: 16px;
+      font-weight: 500;
+      background: #f5f5f5;
+      color: #1DA1F2;
+      line-height: 24px;
+      padding: 16px;
+    }
+    .employee-card {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: #fff;
+      margin-bottom: 8px;
+      padding: 16px;
+      cursor: grab;
+      position: relative;
+      background: white;
+      border-radius: 8px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      // transition: transform 0.3s ease-in-out;
+      p {
+        margin: 0px;
+        line-height: 20px;
+      }
+      .name {
+        font-weight: 500;
+      }
+      .role, .due-date {
+        font-size: 14px;
+        color: #949C9E;
+        line-height: 20px;
+      }
+    }
+  }
+  /* Footer message */
+  .footer-message {
+    height: 10%;
+    font-size: 13px;
+    color: #888;
+    padding: 12px 16px 23px 16px;
+    background-color: #F2F2F2;
   }
 }
-/* Employee Section */
-.section-title {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  margin: 0px;
-  font-size: 14px;
-  font-size: 16px;
-  font-weight: 500;
-  background: #f5f5f5;
-  color: #1DA1F2;
-  line-height: 24px;
-}
 
-.employee-card {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  background: #fff;
-  margin-bottom: 8px;
-  padding: 16px 0;
 
-  position: relative;
-  background: white;
-  border-radius: 8px;
-  transition: transform 0.3s ease-in-out;
-  p {
-    margin: 0px;
-    line-height: 20px;
-  }
-  .name {
-    font-weight: 500;
-  }
-  .role, .due-date {
-    font-size: 14px;
-    color: #949C9E;
-    line-height: 20px;
-  }
-}
 
-/* Footer message */
-.footer-message {
-  font-size: 13px;
-  color: #888;
-  margin-top: 20px;
-}
+
 
 /* Floating Action Button */
 .fab {
@@ -233,39 +116,9 @@
   font-size: 24px;
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  a {
-    text-decoration: none;
+  text-decoration: none;
+  button {
     color: #ffff;
-  }
-}
-
-
-
-
-
-
-
-.calendar-container {
-  padding: 1rem;
-  width: 350px;
-  border-radius: 12px;
-  background: white;
-}
-
-.quick-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 1rem;
-
-  .spacer {
-    flex: 1;
   }
 }
 

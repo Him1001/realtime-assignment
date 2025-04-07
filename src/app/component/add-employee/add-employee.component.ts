@@ -8,11 +8,12 @@ import { UserService } from 'src/app/services/user.service';
 import { CustomDatepickerComponent } from 'src/app/shared/custom-datepicker/custom-datepicker.component';
 import { RoleSelectionSheetComponent } from 'src/app/shared/role-selection-sheet/role-selection-sheet.component';
 import { User } from 'src/app/types/User';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-add-employee',
   templateUrl: './add-employee.component.html',
-  styleUrls: ['./add-employee.component.scss']
+  styleUrls: ['./add-employee.component.scss'],
 })
 export class AddEmployeeComponent {
   constructor(
@@ -20,7 +21,7 @@ export class AddEmployeeComponent {
     private userService: UserService,
     private bottomSheet: MatBottomSheet,
     private router: Router,
-    private snackBar: MatSnackBar  
+    private snackBar: MatSnackBar
   ) {}
 
   public employeeName = signal('');
@@ -32,16 +33,16 @@ export class AddEmployeeComponent {
     { name: 'Today', selected: false, value: 0 },
     { name: 'Next Monday', selected: true, value: 8 },
     { name: 'Next Tuesday', selected: false, value: 9 },
-    { name: 'After 1 week', selected: false, value: 7 }
+    { name: 'After 1 week', selected: false, value: 7 },
   ];
 
   private endOptions = [
     { name: 'No Date', selected: true, value: -1 },
-    { name: 'Today', selected: false, value: 0 }
+    { name: 'Today', selected: false, value: 0 },
   ];
 
-  private isFormValid = computed(() => 
-    !!this.employeeName() && !!this.selectedRole() && !!this.startDate()
+  private isFormValid = computed(
+    () => !!this.employeeName() && !!this.selectedRole() && !!this.startDate()
   );
 
   public openDatePicker(event: Event, type: 'start' | 'end') {
@@ -53,19 +54,24 @@ export class AddEmployeeComponent {
 
     const dialogRef = this.dialog.open(CustomDatepickerComponent, {
       width: '396px',
-      data: { date: selectedDate, options: type === 'start' ? this.startOptions : this.endOptions }
+      data: {
+        date: selectedDate,
+        options: type === 'start' ? this.startOptions : this.endOptions,
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        type === 'start' ? this.startDate.set(result) : this.endDate.set(result);
+        type === 'start'
+          ? this.startDate.set(result)
+          : this.endDate.set(result);
       }
     });
   }
 
   public openRoleSelection() {
     const sheetRef = this.bottomSheet.open(RoleSelectionSheetComponent, {
-      panelClass: 'role-list-items'
+      panelClass: 'role-list-items',
     });
 
     sheetRef.afterDismissed().subscribe((selected) => {
@@ -75,20 +81,22 @@ export class AddEmployeeComponent {
 
   public saveEmployee() {
     if (!this.isFormValid()) {
-      this.snackBar.open('Name, Role and Start Date are Required', '', { duration: 5000 });
+      this.snackBar.open('Name, Role and Start Date are Required', '', {
+        duration: 5000,
+      });
       return;
     }
 
     const userData: User = {
+      id: uuidv4(),
       name: this.employeeName(),
       role: this.selectedRole(),
-      swiped: false,
-      translateX: 0,
       startDate: this.startDate(),
-      endDate: this.endDate()
+      endDate: this.endDate(),
     };
-
-    this.userService.saveEmployee(userData).subscribe(() => this.redirectToHome());
+    this.userService
+      .saveEmployee(userData)
+      .subscribe(() => this.redirectToHome());
   }
 
   public redirectToHome() {

@@ -4,59 +4,58 @@
 </header>
 
 <!-- Main Content Area -->
-<main class="content-area">
-  <ng-container *ngIf="!currentEmployees.length && !previousEmployees.length; else employeeList">
+<main class="content-area" [ngClass]="{'empty-section' : !currentEmployees().length && !previousEmployees().length}">
+  <ng-container *ngIf="!currentEmployees().length && !previousEmployees().length; else employeeList">
     <div class="empty-state">
       <img src="assets/no_user.png" alt="No Data" />
     </div>
   </ng-container>
 
   <ng-template #employeeList>
-    <section class="employee-section" *ngIf="currentEmployees.length">
+    <section class="employee-section">
       <h4 class="section-title">Current employees</h4>
-      <div *ngFor="let currentEmployee of currentEmployees"
-      class="employee-card"
-      cdkDrag
-      cdkDragLockAxis="x"
-    (cdkDragEnded)="onDragEnd($event, currentEmployee, userTypes.current)">
-        <p class="name">{{ currentEmployee.name }}</p>
-        <p class="role">{{ currentEmployee.role }}</p>
-        <p class="due-date">From {{ currentEmployee.startDate | date }}</p>
+      <ng-container *ngIf="currentEmployees().length">
+        <div *ngFor="let currentEmployee of currentEmployees()" class="employee-card" cdkDrag cdkDragLockAxis="x"
+          (cdkDragEnded)="onDragEnd($event, currentEmployee, userTypes.current)">
+          <p class="name">{{ currentEmployee.name }}</p>
+          <p class="role">{{ currentEmployee.role }}</p>
+          <p class="due-date">From {{ currentEmployee.startDate | date }}</p>
 
-        <div class="delete-button">
-          <mat-icon>
-            <img src="/assets/delete.png" alt="Trash-icon" />
-          </mat-icon>
+          <div class="delete-button">
+            <mat-icon>
+              <img src="/assets/delete.png" alt="Trash-icon" />
+            </mat-icon>
+          </div>
         </div>
-      </div>
+      </ng-container>
     </section>
 
     <section class="employee-section previous">
-      <ng-container *ngIf="previousEmployees.length">
-          <h4 class="section-title">Previous employees</h4>
-          <div *ngFor="let previousEmployee of previousEmployees"
-          class="employee-card"
-          cdkDrag
-          cdkDragLockAxis="x"
+      <h4 class="section-title">Previous employees</h4>
+      <ng-container *ngIf="previousEmployees().length">
+        <div *ngFor="let previousEmployee of previousEmployees()" class="employee-card" cdkDrag cdkDragLockAxis="x"
           (cdkDragEnded)="onDragEnd($event, previousEmployee, userTypes.previous)">
-            <p class="name">{{ previousEmployee.name }}</p>
-            <p class="role">{{ previousEmployee.role }}</p>
-            <p class="due-date">{{ previousEmployee.startDate }} - {{ previousEmployee.endDate }}</p>
+          <p class="name">{{ previousEmployee.name }}</p>
+          <p class="role">{{ previousEmployee.role }}</p>
+          <p class="due-date">{{ previousEmployee.startDate }} - {{ previousEmployee.endDate }}</p>
 
-            <div class="delete-button">
-              <mat-icon>
-                <img src="/assets/delete.png" alt="Trash-icon" />
-              </mat-icon>
-            </div>
+          <div class="delete-button">
+            <mat-icon>
+              <img src="/assets/delete.png" alt="Trash-icon" />
+            </mat-icon>
           </div>
-        </ng-container>
-        </section>
+        </div>
+      </ng-container>
+    </section>
 
-      <div class="footer-message">Swipe left to delete</div>
+    <div class="footer-message">Swipe left to delete</div>
   </ng-template>
 </main>
 
 <!-- Floating Action Button -->
-<button class="fab" >
-  <a routerLink="add-employee">+</a>
-</button>
+
+<a routerLink="add-employee">
+  <button class="fab">
+    +
+  </button>
+</a>

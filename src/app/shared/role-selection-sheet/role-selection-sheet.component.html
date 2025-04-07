@@ -1,9 +1,5 @@
 <div class="role-list">
-  <div
-    class="role-item"
-    *ngFor="let role of roles()"
-    (click)="selectRole(role)"
-  >
+  <div class="role-item" *ngFor="let role of roles()" (click)="selectRole(role)">
     {{ role }}
   </div>
 </div>

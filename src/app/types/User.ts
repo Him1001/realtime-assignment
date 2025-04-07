@@ -1,9 +1,8 @@
 export interface User {
+  id: string,
   name: string,
   role: string,
   startDate: string,
-  translateX: number,
-  swiped: boolean,
   endDate: string
 }
 

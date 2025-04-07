@@ -31,6 +31,7 @@ const dbConfig: DBConfig  = {
     store: 'users',
     storeConfig: { keyPath: 'id', autoIncrement: true },
     storeSchema: [
+      { name: 'id', keypath: 'id', options: { unique: true } },
       { name: 'name', keypath: 'name', options: { unique: false } },
       { name: 'role', keypath: 'role', options: { unique: false } },
       { name: 'startDate', keypath: 'startDate', options: {unique: false} },

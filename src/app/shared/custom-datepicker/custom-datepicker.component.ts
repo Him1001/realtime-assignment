@@ -1,53 +1,57 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, signal, WritableSignal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { CustomCalendarHeaderComponent } from '../custom-calendar-header/custom-calendar-header.component';
 
+interface DateOption {
+  name: string;
+  selected: boolean;
+  value: number;
+}
+
 @Component({
   selector: 'app-custom-datepicker',
   templateUrl: './custom-datepicker.component.html',
-  styleUrls: ['./custom-datepicker.component.scss']
+  styleUrls: ['./custom-datepicker.component.scss'],
 })
 export class CustomDatepickerComponent {
   public selectedDate: Date | null = null;
-  public options: {name: string, selected: boolean, value: number}[] = [];
+  options: WritableSignal<DateOption[]> = signal([]);
   public customHeader = CustomCalendarHeaderComponent;
   constructor(
     private dialogRef: MatDialogRef<CustomDatepickerComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.selectedDate = data.date === '' ? null : new Date(data.date);
-    if(data.options) {
-      this.options = data.options
+    if (data.options) {
+      this.options.set(data.options);
     }
-    console.log('options',this.options)
   }
 
   selectDate(value: number) {
-    let today = moment();
-    this.options = this.options.map((opt) =>
-    {
-      return {...opt, selected: false}
-  })
-    let index = this.options.findIndex((opt) => opt.value === value);
-    if(index !== -1) {
-      let previousSelected = this.options[index].selected;
-      this.options[index] = {...this.options[index], selected: !previousSelected}
-    }
-    switch(value) {
+    const today = moment();
+
+    // Reset all selected states
+    const updatedOptions = this.options().map((opt) => ({
+      ...opt,
+      selected: opt.value === value ? !opt.selected : false,
+    }));
+    this.options.set(updatedOptions);
+
+    // Date logic based on value
+    switch (value) {
       case 0:
         this.selectedDate = today.toDate();
-      break;
+        break;
+      case 7:
+        this.selectedDate = today.clone().add(1, 'weeks').toDate();
+        break;
       case 8:
       case 9:
         this.selectedDate = today.clone().isoWeekday(value).toDate();
-      break;
-      case 7:
-        this.selectedDate = today.clone().add(1, 'weeks').toDate();
-      break;
+        break;
       case -1:
         this.selectedDate = null;
-      break;
+        break;
       default:
         break;
     }
@@ -58,7 +62,10 @@ export class CustomDatepickerComponent {
   }
 
   saveDate() {
-    this.dialogRef.close(this.selectedDate ? this.selectedDate.toDateString() : 'No date');
+    const result = this.selectedDate
+      ? this.selectedDate.toDateString()
+      : 'No date';
+    this.dialogRef.close(result);
   }
 
   closeDialog() {

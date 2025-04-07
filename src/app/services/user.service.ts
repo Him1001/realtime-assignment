@@ -4,11 +4,10 @@ import { User } from '../types/User';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-
-  constructor(private dbService: NgxIndexedDBService) { }
+  constructor(private dbService: NgxIndexedDBService) {}
 
   saveEmployee(data: User) {
     return this.dbService.add('users', data);
@@ -16,5 +15,9 @@ export class UserService {
 
   getUsers(): Observable<User[]> {
     return this.dbService.getAll('users');
+  }
+
+  removeEmployee(id: string): Observable<unknown> {
+    return this.dbService.delete('users', id);
   }
 }

@@ -1,5 +1,5 @@
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'src/app/services/user.service';
 import { User, UserType } from 'src/app/types/User';
@@ -7,89 +7,89 @@ import { User, UserType } from 'src/app/types/User';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  constructor(private userService: UserService, private snackBar: MatSnackBar) {}
-  public currentEmployees: User[] = [];
-  public previousEmployees: User[] = [];
-  private currentTime: number = new Date().getTime();
+  constructor(
+    private userService: UserService,
+    private snackBar: MatSnackBar
+  ) {}
+
+  private currentTime = new Date().getTime();
   private deletedEmployee: { employee: User; index: number } | null = null;
+
+  public allUsers = signal<User[]>([]);
+  public currentEmployees = computed(() =>
+    this.allUsers().filter((user) => !this.checkPreviousDate(user.endDate))
+  );
+  public previousEmployees = computed(() =>
+    this.allUsers().filter((user) => this.checkPreviousDate(user.endDate))
+  );
+
   protected userTypes = UserType;
 
   ngOnInit() {
     this.userService.getUsers().subscribe((users) => {
-        users.map((user) => {
-          if (this.checkPreviousDate(user.endDate)) {
-            this.previousEmployees.push(user);
-          } else {
-            this.currentEmployees.push(user);
-          }
-        })
-    })
-
+      this.allUsers.set(users);
+    });
   }
 
   private checkPreviousDate(endDate: string) {
-    if (!endDate) {
-      return false;
-    }
-    return (new Date(endDate)).getTime() < this.currentTime ? true : false;
+    return endDate ? new Date(endDate).getTime() < this.currentTime : false;
   }
-
 
   onDragEnd(event: CdkDragEnd, employee: User, userType: UserType) {
-    let distance = event.distance;
-    let dropDistance = event.dropPoint;
+    const { x } = event.distance;
+    const { x: dropX } = event.dropPoint;
     const element = event.source.element.nativeElement;
-    const boundingRect = element.getBoundingClientRect();
-    if(distance.x > 0) {
-      event.source.reset()
-    } else if (dropDistance.x < (boundingRect.width / 2)) {
-      this.deleteEmployee(employee, userType)
-    } else {
-      event.source.reset()
+    const width = element.getBoundingClientRect().width;
+
+    if (x > 0 || dropX > width / 2) {
+      event.source.reset();
+      return;
     }
+
+    this.deleteEmployee(employee, userType);
   }
 
-  public deleteEmployee(employee: User, usertype: UserType) {
-    let index: number;
-    let isCurrentEmployee = usertype === UserType.current;
-    if (isCurrentEmployee) {
-      index = this.currentEmployees.findIndex((e) => e.name === employee.name);
-    } else {
-      index = this.previousEmployees.findIndex((e) => e.name === employee.name);
-    }
+  deleteEmployee(employee: User, userType: UserType) {
+    const employees =
+      userType === UserType.current
+        ? this.currentEmployees()
+        : this.previousEmployees();
 
-    if (index !== -1) {
-      // Store the deleted employee
-      this.deletedEmployee = { employee, index };
-      console.log(index)
-      isCurrentEmployee ? this.currentEmployees.splice(index, 1) : this.previousEmployees.splice(index, 1);
-      console.log(this.currentEmployees)
+    const index = employees.findIndex((e) => e.id === employee.id);
+    if (index === -1) return;
 
-      // Show snackbar with Undo option
-      this.snackBar.open('Employee data has been Deleted', 'Undo', {
-        duration: 5000, // 5 seconds
-      }).onAction().subscribe(() => {
-        // Restore employee if Undo is clicked
+    this.deletedEmployee = { employee, index };
+    this.allUsers.update((users) => users.filter((u) => u !== employee));
+    this.userService.removeEmployee(employee.id).subscribe();
+
+    this.snackBar
+      .open('Employee data has been Deleted', 'Undo', { duration: 5000 })
+      .onAction()
+      .subscribe(() => {
         if (this.deletedEmployee) {
-          isCurrentEmployee ?
-          this.currentEmployees.splice(this.deletedEmployee.index, 0, this.deletedEmployee.employee)
-          : this.previousEmployees.splice(this.deletedEmployee.index, 0, this.deletedEmployee.employee);
+          this.allUsers.update((users) => {
+            const updated = [...users];
+            if (this.deletedEmployee?.employee) {
+              this.userService
+                .saveEmployee(this.deletedEmployee.employee)
+                .subscribe();
+            }
+            updated.splice(
+              this.deletedEmployee!.index,
+              0,
+              this.deletedEmployee!.employee
+            );
+            return updated;
+          });
           this.deletedEmployee = null;
         }
       });
-
-    }
   }
-
 
   deleteItem(item: User) {
-    this.currentEmployees = this.currentEmployees.filter(i => i !== item);
-  }
-
-  saveItem(item: any) {
-    alert('Saved: ' + JSON.stringify(item));
+    this.allUsers.update((users) => users.filter((i) => i !== item));
   }
 }
