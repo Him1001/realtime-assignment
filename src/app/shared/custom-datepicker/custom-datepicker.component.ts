@@ -25,6 +25,9 @@ export class CustomDatepickerComponent {
     if (data.options) {
       this.options.set(data.options);
     }
+    if(data.date) {
+      this.selectedDate = data.date;
+    }
   }
 
   selectDate(value: number) {
